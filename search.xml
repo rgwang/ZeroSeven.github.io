@@ -78,9 +78,9 @@
       
         <tags>
             
-            <tag> YOLOv1 </tag>
-            
             <tag> object deteciton </tag>
+            
+            <tag> YOLOv1 </tag>
             
         </tags>
       
@@ -130,9 +130,9 @@
       
         <tags>
             
-            <tag> mAP </tag>
-            
             <tag> object detection </tag>
+            
+            <tag> mAP </tag>
             
         </tags>
       
