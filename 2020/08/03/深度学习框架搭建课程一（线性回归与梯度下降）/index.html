@@ -1,0 +1,272 @@
+<!DOCTYPE html><html lang="zh-CN" data-theme="light"><head><meta charset="UTF-8"><meta http-equiv="X-UA-Compatible" content="IE=edge"><meta name="viewport" content="width=device-width,initial-scale=1"><title>深度学习框架搭建课程一（线性回归与梯度下降） | rgwang</title><meta name="description" content="回归(Regression)-&gt;拟合、预测 分类(Classification)-&gt;输出类别  根据卧室面积预测房价加载数据1from sklearn.datasets import load_boston # 从sklearn库中调用波士顿房价数据 1data &#x3D; load_boston() 1X, y &#x3D; data[&#39;data&#39;], data[&#39;target&#39;] 1import"><meta name="keywords" content="DL,Gradient Descent"><meta name="author" content="rgwang"><meta name="copyright" content="rgwang"><meta name="format-detection" content="telephone=no"><link rel="shortcut icon" href="/img/favicon.png"><meta http-equiv="Cache-Control" content="no-transform"><meta http-equiv="Cache-Control" content="no-siteapp"><link rel="preconnect" href="//cdn.jsdelivr.net"/><link rel="dns-prefetch" href="//cdn.jsdelivr.net"/><link rel="preconnect" href="https://fonts.googleapis.com" crossorigin="crossorigin"/><link rel="dns-prefetch" href="https://fonts.googleapis.com"/><link rel="preconnect" href="//busuanzi.ibruce.info"/><link rel="dns-prefetch" href="//busuanzi.ibruce.info"/><meta name="twitter:card" content="summary"><meta name="twitter:title" content="深度学习框架搭建课程一（线性回归与梯度下降）"><meta name="twitter:description" content="回归(Regression)-&gt;拟合、预测 分类(Classification)-&gt;输出类别  根据卧室面积预测房价加载数据1from sklearn.datasets import load_boston # 从sklearn库中调用波士顿房价数据 1data &#x3D; load_boston() 1X, y &#x3D; data[&#39;data&#39;], data[&#39;target&#39;] 1import"><meta name="twitter:image" content="https://rgwang.github.io/img/landscape-photo-of-mountain-with-polar-lights-1434608.jpg"><meta property="og:type" content="article"><meta property="og:title" content="深度学习框架搭建课程一（线性回归与梯度下降）"><meta property="og:url" content="https://rgwang.github.io/2020/08/03/%E6%B7%B1%E5%BA%A6%E5%AD%A6%E4%B9%A0%E6%A1%86%E6%9E%B6%E6%90%AD%E5%BB%BA%E8%AF%BE%E7%A8%8B%E4%B8%80%EF%BC%88%E7%BA%BF%E6%80%A7%E5%9B%9E%E5%BD%92%E4%B8%8E%E6%A2%AF%E5%BA%A6%E4%B8%8B%E9%99%8D%EF%BC%89/"><meta property="og:site_name" content="rgwang"><meta property="og:description" content="回归(Regression)-&gt;拟合、预测 分类(Classification)-&gt;输出类别  根据卧室面积预测房价加载数据1from sklearn.datasets import load_boston # 从sklearn库中调用波士顿房价数据 1data &#x3D; load_boston() 1X, y &#x3D; data[&#39;data&#39;], data[&#39;target&#39;] 1import"><meta property="og:image" content="https://rgwang.github.io/img/landscape-photo-of-mountain-with-polar-lights-1434608.jpg"><meta property="article:published_time" content="2020-08-03T15:25:31.667Z"><meta property="article:modified_time" content="2020-08-04T04:43:17.731Z"><script src="https://cdn.jsdelivr.net/npm/js-cookie/dist/js.cookie.min.js"></script><script>var autoChangeMode = '1'
+var t = Cookies.get("theme")
+if (autoChangeMode == '1'){
+  var isDarkMode = window.matchMedia("(prefers-color-scheme: dark)").matches
+  var isLightMode = window.matchMedia("(prefers-color-scheme: light)").matches
+  var isNotSpecified = window.matchMedia("(prefers-color-scheme: no-preference)").matches
+  var hasNoSupport = !isDarkMode && !isLightMode && !isNotSpecified
+
+  if (t === undefined){
+    if (isLightMode) activateLightMode()
+    else if (isDarkMode) activateDarkMode()
+    else if (isNotSpecified || hasNoSupport){
+      console.log('You specified no preference for a color scheme or your browser does not support it. I Schedule dark mode during night time.')
+      var now = new Date()
+      var hour = now.getHours()
+      var isNight = hour < 6 || hour >= 18
+      isNight ? activateDarkMode() : activateLightMode()
+  }
+  } else if (t == 'light') activateLightMode()
+  else activateDarkMode()
+
+} else if (autoChangeMode == '2'){
+  now = new Date();
+  hour = now.getHours();
+  isNight = hour < 6 || hour >= 18
+  if(t === undefined) isNight? activateDarkMode() : activateLightMode()
+  else if (t === 'light') activateLightMode()
+  else activateDarkMode() 
+} else {
+  if ( t == 'dark' ) activateDarkMode()
+  else if ( t == 'light') activateLightMode()
+}
+
+function activateDarkMode(){
+  document.documentElement.setAttribute('data-theme', 'dark')
+  if (document.querySelector('meta[name="theme-color"]') !== null){
+    document.querySelector('meta[name="theme-color"]').setAttribute('content','#000')
+  }
+}
+function activateLightMode(){
+  document.documentElement.setAttribute('data-theme', 'light')
+  if (document.querySelector('meta[name="theme-color"]') !== null){
+  document.querySelector('meta[name="theme-color"]').setAttribute('content','#fff')
+  }
+}</script><link rel="stylesheet" href="/css/index.css"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/font-awesome@latest/css/font-awesome.min.css"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@latest/dist/jquery.fancybox.min.css"><link rel="canonical" href="https://rgwang.github.io/2020/08/03/%E6%B7%B1%E5%BA%A6%E5%AD%A6%E4%B9%A0%E6%A1%86%E6%9E%B6%E6%90%AD%E5%BB%BA%E8%AF%BE%E7%A8%8B%E4%B8%80%EF%BC%88%E7%BA%BF%E6%80%A7%E5%9B%9E%E5%BD%92%E4%B8%8E%E6%A2%AF%E5%BA%A6%E4%B8%8B%E9%99%8D%EF%BC%89/"><link rel="next" title="YOLOv1(You Only Look Once)" href="https://rgwang.github.io/2020/07/13/YOLOv1(You-Only-Look-Once)/"><link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Titillium+Web"><script>var GLOBAL_CONFIG = { 
+  root: '/',
+  algolia: undefined,
+  localSearch: {"path":"search.xml","languages":{"hits_empty":"找不到您查询的内容:${query}"}},
+  translate: {"defaultEncoding":2,"translateDelay":0,"cookieDomain":"https://rgwang.github.io/","msgToTraditionalChinese":"繁","msgToSimplifiedChinese":"簡"},
+  copy: {
+    success: '复制成功',
+    error: '复制错误',
+    noSupport: '浏览器不支持'
+  },
+  bookmark: {
+    message_prev: '按',
+    message_next: '键将本页加入书签'
+  },
+  runtime_unit: '天',
+  runtime: true,
+  copyright: undefined,
+  ClickShowText: undefined,
+  medium_zoom: false,
+  fancybox: true,
+  Snackbar: undefined,
+  baiduPush: false,
+  highlightCopy: true,
+  highlightLang: true,
+  highlightShrink: 'false',
+  isFontAwesomeV5: false,
+  isPhotoFigcaption: false,
+  islazyload: false,
+  isanchor: false
+  
+}</script><script>var GLOBAL_CONFIG_SITE = { 
+  isPost: true,
+  isHome: false,
+  isSidebar: true  
+  }</script><noscript><style>
+#page-header {
+  opacity: 1
+}
+.justified-gallery img{
+  opacity: 1
+}
+</style></noscript><meta name="generator" content="Hexo 4.2.1"></head><body><div id="loading-box"><div class="loading-left-bg"></div><div class="loading-right-bg"></div><div class="spinner-box"><div class="configure-border-1"><div class="configure-core"></div></div><div class="configure-border-2"><div class="configure-core"></div></div><div class="loading-word">加载中...</div></div></div><canvas class="fireworks"></canvas><div id="mobile-sidebar"><div id="menu_mask"></div><div id="mobile-sidebar-menus"><div class="mobile_author_icon"><img class="avatar-img" src="/img/1971a47ac42c3aad3425f91b89c64fd4.jpg" onerror="onerror=null;src='/img/friend_404.gif'" alt="avatar"/></div><div class="mobile_post_data"><div class="mobile_data_item is-center"><div class="mobile_data_link"><a href="/archives/"><div class="headline">文章</div><div class="length_num">5</div></a></div></div><div class="mobile_data_item is-center">      <div class="mobile_data_link"><a href="/tags/"><div class="headline">标签</div><div class="length_num">7</div></a></div></div><div class="mobile_data_item is-center">     <div class="mobile_data_link"><a href="/categories/"><div class="headline">分类</div><div class="length_num">4</div></a></div></div></div><hr/><div class="menus_items"><div class="menus_item"><a class="site-page" href="/"><i class="fa-fw fa fa-home"></i><span> Home</span></a></div><div class="menus_item"><a class="site-page" href="/archives/"><i class="fa-fw fa fa-archive"></i><span> Archives</span></a></div><div class="menus_item"><a class="site-page" href="/tags/"><i class="fa-fw fa fa-tags"></i><span> Tags</span></a></div><div class="menus_item"><a class="site-page" href="/categories/"><i class="fa-fw fa fa-folder-open"></i><span> Categories</span></a></div></div></div></div><i class="fa fa-arrow-right on" id="toggle-sidebar" aria-hidden="true">     </i><div id="sidebar"><div class="sidebar-toc"><div class="sidebar-toc__title">目录</div><div class="sidebar-toc__progress"><span class="progress-notice">你已经读了</span><span class="progress-num">0</span><span class="progress-percentage">%</span><div class="sidebar-toc__progress-bar">     </div></div><div class="sidebar-toc__content"><ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#根据卧室面积预测房价"><span class="toc-number">1.</span> <span class="toc-text">根据卧室面积预测房价</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#加载数据"><span class="toc-number">1.1.</span> <span class="toc-text">加载数据</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#本课为线性回归，故需找出一条最佳的直线-y-wx-b-，来拟合卧室和房价的关系"><span class="toc-number">2.</span> <span class="toc-text">本课为线性回归，故需找出一条最佳的直线$y&#x3D;wx+b$，来拟合卧室和房价的关系</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#第一种方法：随机找，记录最优值。"><span class="toc-number">2.1.</span> <span class="toc-text">第一种方法：随机找，记录最优值。</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#如何让Loss更快地下降？"><span class="toc-number">3.</span> <span class="toc-text">如何让Loss更快地下降？</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#选用L1-loss时的梯度下降过程"><span class="toc-number">4.</span> <span class="toc-text">选用L1_loss时的梯度下降过程</span></a></li></ol></div></div></div><div id="body-wrap"><div class="post-bg" id="nav" style="background-image: url(/img/landscape-photo-of-mountain-with-polar-lights-1434608.jpg)"><div id="page-header"><span class="pull_left" id="blog_name"><a class="blog_title" id="site-name" href="/">rgwang</a></span><span class="pull_right menus"><div id="search_button"><a class="site-page social-icon search"><i class="fa fa-search fa-fw"></i><span> 搜索</span></a></div><div class="menus_items"><div class="menus_item"><a class="site-page" href="/"><i class="fa-fw fa fa-home"></i><span> Home</span></a></div><div class="menus_item"><a class="site-page" href="/archives/"><i class="fa-fw fa fa-archive"></i><span> Archives</span></a></div><div class="menus_item"><a class="site-page" href="/tags/"><i class="fa-fw fa fa-tags"></i><span> Tags</span></a></div><div class="menus_item"><a class="site-page" href="/categories/"><i class="fa-fw fa fa-folder-open"></i><span> Categories</span></a></div></div><span class="toggle-menu close"><a class="site-page"><i class="fa fa-bars fa-fw" aria-hidden="true"></i></a></span></span></div><div id="post-info"><div id="post-title"><div class="posttitle">深度学习框架搭建课程一（线性回归与梯度下降）</div></div><div id="post-meta"><div class="meta-firstline"><time class="post-meta__date"><span class="post-meta__date-created" title="发表于 2020-08-03 23:25:31"><i class="fa fa-calendar" aria-hidden="true"></i> 发表于 2020-08-03</span><span class="post-meta__separator">|</span><span class="post-meta__date-updated" title="更新于 2020-08-04 12:43:17"><i class="fa fa-history" aria-hidden="true"></i> 更新于 2020-08-04</span></time><span class="post-meta__categories"><span class="post-meta__separator">|</span><i class="fa fa-inbox post-meta__icon" aria-hidden="true"></i><a class="post-meta__categories" href="/categories/Deep-Learning/">Deep Learning</a></span></div><div class="meta-secondline"> <span class="post-meta-wordcount"><i class="post-meta__icon fa fa-file-word-o" aria-hidden="true"></i><span>字数总计:</span><span class="word-count">1k</span><span class="post-meta__separator">|</span><i class="post-meta__icon fa fa-clock-o" aria-hidden="true"></i><span>阅读时长: 4 分钟</span></span></div><div class="meta-thirdline"><span class="post-meta-pv-cv"><span class="post-meta__separator">|</span><i class="fa fa-eye post-meta__icon" aria-hidden="true"> </i><span>阅读量:</span><span id="busuanzi_value_page_pv"></span></span><span class="post-meta-commentcount"></span></div></div></div></div><main class="layout_post" id="content-inner"><article id="post"><div class="post-content" id="article-container"><ul>
+<li>回归(Regression)-&gt;拟合、预测</li>
+<li>分类(Classification)-&gt;输出类别</li>
+</ul>
+<h2 id="根据卧室面积预测房价"><a href="#根据卧室面积预测房价" class="headerlink" title="根据卧室面积预测房价"></a>根据卧室面积预测房价</h2><h3 id="加载数据"><a href="#加载数据" class="headerlink" title="加载数据"></a>加载数据</h3><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">from</span> sklearn.datasets <span class="keyword">import</span> load_boston <span class="comment"># 从sklearn库中调用波士顿房价数据</span></span><br></pre></td></tr></table></figure>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">data = load_boston()</span><br></pre></td></tr></table></figure>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">X, y = data[<span class="string">'data'</span>], data[<span class="string">'target'</span>]</span><br></pre></td></tr></table></figure>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> matplotlib.pyplot <span class="keyword">as</span> plt</span><br></pre></td></tr></table></figure>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">X_rm = X[:, <span class="number">5</span>] <span class="comment"># 取出X中房间面积的数据</span></span><br></pre></td></tr></table></figure>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">plt.scatter(X_rm, y)</span><br></pre></td></tr></table></figure>
+<pre><code>&lt;matplotlib.collections.PathCollection at 0x7fc0122d41d0&gt;
+</code></pre><p><img src="https://cdn.jsdelivr.net/gh/rgwang/CDN@latest/2020/08/04/cfdeaa2eba6c0d289ed1b81f3cd0a003.png" alt=""></p>
+<h2 id="本课为线性回归，故需找出一条最佳的直线-y-wx-b-，来拟合卧室和房价的关系"><a href="#本课为线性回归，故需找出一条最佳的直线-y-wx-b-，来拟合卧室和房价的关系" class="headerlink" title="本课为线性回归，故需找出一条最佳的直线$y=wx+b$，来拟合卧室和房价的关系"></a>本课为线性回归，故需找出一条最佳的直线$y=wx+b$，来拟合卧室和房价的关系</h2><h3 id="第一种方法：随机找，记录最优值。"><a href="#第一种方法：随机找，记录最优值。" class="headerlink" title="第一种方法：随机找，记录最优值。"></a>第一种方法：随机找，记录最优值。</h3><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> random</span><br></pre></td></tr></table></figure>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">f</span><span class="params">(x)</span>:</span></span><br><span class="line">    <span class="keyword">return</span> random.randint(<span class="number">-50</span>,<span class="number">50</span>) * x + random.randint(<span class="number">-50</span>,<span class="number">50</span>)</span><br><span class="line"></span><br><span class="line">plt.scatter(X_rm, y)</span><br><span class="line">plt.plot(X_rm, f(X_rm), color = <span class="string">'red'</span>)</span><br></pre></td></tr></table></figure>
+<pre><code>[&lt;matplotlib.lines.Line2D at 0x7fc010fe5090&gt;]
+</code></pre><p><img src="https://cdn.jsdelivr.net/gh/rgwang/CDN@latest/2020/08/04/70a629eb6d9968bbe6fe732622265163.png" alt="output_12_1"></p>
+<p><strong>判断拟合结果好与不好的标准(Evaluation)</strong></p>
+<ul>
+<li>存在一组$x$，假设一个函数$f(x)$，输出估计的$\hat y$，衡量输出结果的好坏在于衡量真实$y$与估计$\hat y$之间的差距。</li>
+</ul>
+<script type="math/tex; mode=display">L1\_loss=\frac {1}{n}\sum_{i=1}^n|y_{true_i}-\hat y_i|</script><script type="math/tex; mode=display">L2\_loss=\frac {1}{n}\sum_{i=1}^n(y_{true_i}-\hat y_i)^2</script><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> numpy <span class="keyword">as</span> np</span><br></pre></td></tr></table></figure>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">l2_loss</span><span class="params">(y,yhat)</span>:</span></span><br><span class="line">    <span class="keyword">return</span> np.mean((np.array(y) - np.array(yhat)) ** <span class="number">2</span>)</span><br></pre></td></tr></table></figure>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">price</span><span class="params">(x, k, b)</span>:</span> <span class="comment"># 线性拟合模型</span></span><br><span class="line">    <span class="keyword">return</span> k * x + b</span><br><span class="line"></span><br><span class="line">trying_time = <span class="number">1000</span></span><br><span class="line">min_loss = float(<span class="string">'inf'</span>)</span><br><span class="line">best_k, best_b = <span class="literal">None</span>, <span class="literal">None</span></span><br><span class="line"></span><br><span class="line">loss_update = []</span><br><span class="line"><span class="comment">#######################随机找拟合模型，记录最优情况#######################</span></span><br><span class="line"><span class="keyword">for</span> i <span class="keyword">in</span> range(trying_time):</span><br><span class="line">    k = random.randint(<span class="number">-200</span>,<span class="number">200</span>)</span><br><span class="line">    b = random.randint(<span class="number">-200</span>,<span class="number">200</span>)</span><br><span class="line">    </span><br><span class="line">    yhat = price(X_rm, k, b)</span><br><span class="line">    </span><br><span class="line">    L2 = l2_loss(y=y, yhat=yhat)</span><br><span class="line">    </span><br><span class="line">    <span class="keyword">if</span> L2 &lt; min_loss:</span><br><span class="line">        min_loss = L2</span><br><span class="line">        best_k, best_b = k, b</span><br><span class="line">        loss_update.append([i, L2])</span><br><span class="line">        print(<span class="string">"在第&#123;&#125;步时，k和b更好，此时的Loss是：&#123;&#125;"</span>.format(i, L2))</span><br><span class="line">        </span><br><span class="line">plt.scatter(X_rm, y)</span><br><span class="line">plt.plot(X_rm, price(X_rm, best_k, best_b), color=<span class="string">'red'</span>)</span><br></pre></td></tr></table></figure>
+<pre><code>在第0步时，k和b更好，此时的Loss是：250189.90831387945
+在第2步时，k和b更好，此时的Loss是：31492.41583403755
+在第5步时，k和b更好，此时的Loss是：85.14510595256915
+
+[&lt;matplotlib.lines.Line2D at 0x7fc010f60f10&gt;]
+</code></pre><p><img src="https://cdn.jsdelivr.net/gh/rgwang/CDN@latest/2020/08/04/fa3d4829ab099075c9645fb01b9ce957.png" alt="output_17_2"></p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">loss_i, loss_y = [i <span class="keyword">for</span> i, l_ <span class="keyword">in</span> loss_update], [l_ <span class="keyword">for</span> i, l_ <span class="keyword">in</span> loss_update]</span><br></pre></td></tr></table></figure>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">plt.plot(loss_i, loss_y)</span><br></pre></td></tr></table></figure>
+<pre><code>[&lt;matplotlib.lines.Line2D at 0x7fc010e8db90&gt;]
+</code></pre><p><img src="https://cdn.jsdelivr.net/gh/rgwang/CDN@latest/2020/08/04/fe704e3344bb5862ca1f6c815e69e3e0.png" alt="output_19_1"></p>
+<h2 id="如何让Loss更快地下降？"><a href="#如何让Loss更快地下降？" class="headerlink" title="如何让Loss更快地下降？"></a><strong>如何让Loss更快地下降？</strong></h2><p>梯度方向是函数增长最快的方向，则负梯度方向是函数下降最快的方向。通过计算函数梯度，在负梯度方向更新自变量的值，就能逐渐减小Loss值。——梯度下降法</p>
+<script type="math/tex; mode=display">L2\_loss=\frac{1}{n}\sum_{i=1}^n(y_{true_i}-\hat y_i)^2</script><p>　　　　　　　　　　　　　　　　　　　$=\frac{1}{n}\sum<em>{i=1}^n(y</em>{true_i}-(k\times x_i+b))^2$</p>
+<script type="math/tex; mode=display">\frac{\partial loss}{\partial k}=-\frac{2}{n}\sum (y_{true_i}-(k\times x_i+b))x_i</script><script type="math/tex; mode=display">=-\frac{2}{n}\sum (y_{true_i}-\hat y_i)x_i</script><script type="math/tex; mode=display">\frac{\partial loss}{\partial b}=-\frac{2}{n}\sum (y_{true_i}-\hat y_i)</script><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">partial_k</span><span class="params">(y, yhat, x)</span>:</span> <span class="comment"># loss对k的偏导</span></span><br><span class="line">    <span class="keyword">return</span> <span class="number">-2</span> * np.mean((np.array(y)-np.array(yhat)) * np.array(x))</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">partial_b</span><span class="params">(y, yhat)</span>:</span> <span class="comment"># loss对b的偏导</span></span><br><span class="line">    <span class="keyword">return</span> <span class="number">-2</span> * np.mean((np.array(y)-np.array(yhat)))</span><br></pre></td></tr></table></figure>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br></pre></td><td class="code"><pre><span class="line">trying_time = <span class="number">1000</span></span><br><span class="line">min_loss = float(<span class="string">'inf'</span>)</span><br><span class="line">best_k, best_b = <span class="literal">None</span>, <span class="literal">None</span></span><br><span class="line"></span><br><span class="line">loss_update = []</span><br><span class="line"></span><br><span class="line">k = random.randint(<span class="number">-200</span>,<span class="number">200</span>)</span><br><span class="line">b = random.randint(<span class="number">-200</span>,<span class="number">200</span>)</span><br><span class="line"></span><br><span class="line">learning_rate = <span class="number">1e-3</span></span><br><span class="line"><span class="comment">#############################梯度下降法求拟合模型#######################</span></span><br><span class="line"><span class="keyword">for</span> i <span class="keyword">in</span> range(trying_time):</span><br><span class="line">    yhat = price(X_rm, k, b)</span><br><span class="line">    L2 = l2_loss(y, yhat)</span><br><span class="line">    </span><br><span class="line">    <span class="keyword">if</span> L2 &lt; min_loss:</span><br><span class="line">        min_loss = L2</span><br><span class="line">        best_k, best_b = k, b</span><br><span class="line">        loss_update.append([i, L2])</span><br><span class="line">        <span class="keyword">if</span> i % <span class="number">100</span> ==<span class="number">0</span>:</span><br><span class="line">            print(<span class="string">"在第&#123;&#125;步时，k和b更好，此时的Loss是：&#123;&#125;"</span>.format(i, L2))</span><br><span class="line">        </span><br><span class="line">    gradient_k = partial_k(y, yhat, X_rm)</span><br><span class="line">    gradient_b = partial_b(y, yhat)</span><br><span class="line">    </span><br><span class="line">    k = k - gradient_k * learning_rate</span><br><span class="line">    b = b - gradient_b * learning_rate</span><br><span class="line">    </span><br><span class="line">plt.scatter(X_rm, y)</span><br><span class="line">plt.plot(X_rm, price(X_rm, best_k, best_b),color=<span class="string">'red'</span>)</span><br></pre></td></tr></table></figure>
+<pre><code>在第0步时，k和b更好，此时的Loss是：683883.8072032174
+在第100步时，k和b更好，此时的Loss是：43.75703967614612
+在第200步时，k和b更好，此时的Loss是：43.73083829219306
+在第300步时，k和b更好，此时的Loss是：43.730213182251454
+在第400步时，k和b更好，此时的Loss是：43.72959107251158
+在第500步时，k和b更好，此时的Loss是：43.728971947626825
+在第600步时，k和b更好，此时的Loss是：43.728355793276016
+在第700步时，k和b更好，此时的Loss是：43.72774259520664
+在第800步时，k和b更好，此时的Loss是：43.72713233923459
+在第900步时，k和b更好，此时的Loss是：43.72652501124383
+
+[&lt;matplotlib.lines.Line2D at 0x7fc010f57e50&gt;]
+</code></pre><p><img src="https://cdn.jsdelivr.net/gh/rgwang/CDN@latest/2020/08/04/c2b5fb4350db8a5027c1888e8e4b6a49.png" alt="output_24_2"></p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">x_i, x_l = [i <span class="keyword">for</span> i, l <span class="keyword">in</span> loss_update], [l <span class="keyword">for</span> i, l <span class="keyword">in</span> loss_update]</span><br><span class="line">plt.plot(x_i, x_l)</span><br></pre></td></tr></table></figure>
+<pre><code>[&lt;matplotlib.lines.Line2D at 0x7fc010d87c10&gt;]
+</code></pre><p><img src="https://cdn.jsdelivr.net/gh/rgwang/CDN@latest/2020/08/04/789498565a8534739b250ed87a024518.png" alt="output_25_1"></p>
+<p><strong>选择L1_loss作为评价标准时</strong></p>
+<script type="math/tex; mode=display">L1\_loss=\frac{1}{n}\sum_{i=1}^n|y_{true_i}-\hat y_i|</script><script type="math/tex; mode=display">=\frac{1}{n}\sum_{i=1}^n|y_{true_i}-(k\times x_i+b)|</script><script type="math/tex; mode=display">\frac{\partial loss}{\partial k}=-\frac{1}{n}\sum_{i}^n x_i+\frac{1}{n}\sum_j^n x_j,y_{true_i}-\hat y_i>0, y_{true_j}-\hat y_j<0</script><script type="math/tex; mode=display">\frac{\partial loss}{\partial b}=-\frac{1}{n}\sum_{i}^n 1+\frac{1}{n}\sum_j^n 1,y_{true_i}-\hat y_i>0, y_{true_j}-\hat y_j<0</script><h2 id="选用L1-loss时的梯度下降过程"><a href="#选用L1-loss时的梯度下降过程" class="headerlink" title="选用L1_loss时的梯度下降过程"></a>选用L1_loss时的梯度下降过程</h2><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">l1_partial_k</span><span class="params">(x, y, yhat)</span>:</span></span><br><span class="line">    out = []</span><br><span class="line">    <span class="keyword">for</span> i <span class="keyword">in</span> range(len(x)):</span><br><span class="line">        <span class="keyword">if</span> y[i] &gt; yhat[i]: </span><br><span class="line">            out.append(-x[i])</span><br><span class="line">        <span class="keyword">elif</span> abs(y[i] - yhat[i])&lt;<span class="number">1e-5</span>:</span><br><span class="line">            out.append(<span class="number">0</span>)</span><br><span class="line">        <span class="keyword">else</span>:</span><br><span class="line">            out.append(x[i])</span><br><span class="line">            </span><br><span class="line">    <span class="keyword">return</span> np.mean(np.array(out))</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">l1_partial_b</span><span class="params">(x, y, yhat)</span>:</span></span><br><span class="line">    out = []</span><br><span class="line">    <span class="keyword">for</span> i <span class="keyword">in</span> range(len(x)):</span><br><span class="line">        <span class="keyword">if</span> y[i] &gt;= yhat[i]:</span><br><span class="line">            out.append(<span class="number">-1</span>)</span><br><span class="line">        <span class="keyword">elif</span> abs(y[i] - yhat[i])&lt;<span class="number">1e-5</span>:</span><br><span class="line">            out.append(<span class="number">0</span>)</span><br><span class="line">        <span class="keyword">else</span>:</span><br><span class="line">            out.append(<span class="number">1</span>)</span><br><span class="line">            </span><br><span class="line">    <span class="keyword">return</span> np.mean(np.array(out))</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">l1_loss</span><span class="params">(y, yhat)</span>:</span></span><br><span class="line">    <span class="keyword">return</span> np.mean(abs(np.array(y)-np.array(yhat)))</span><br></pre></td></tr></table></figure>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br></pre></td><td class="code"><pre><span class="line">trying_time = <span class="number">10000</span></span><br><span class="line">min_loss = float(<span class="string">'inf'</span>)</span><br><span class="line">best_k, best_b = <span class="literal">None</span>, <span class="literal">None</span></span><br><span class="line"></span><br><span class="line">loss_update = []</span><br><span class="line"></span><br><span class="line">k = random.randint(<span class="number">-100</span>,<span class="number">100</span>)</span><br><span class="line">b = random.randint(<span class="number">-100</span>,<span class="number">100</span>)</span><br><span class="line"></span><br><span class="line">learning_rate = <span class="number">1e-3</span></span><br><span class="line"><span class="comment">###################L1_loss下的梯度下降过程##################</span></span><br><span class="line"><span class="keyword">for</span> i <span class="keyword">in</span> range(trying_time):</span><br><span class="line">    yhat = price(X_rm, k, b)</span><br><span class="line">    L1 = l1_loss(y, yhat)</span><br><span class="line">    </span><br><span class="line">    <span class="keyword">if</span> L1 &lt; min_loss:</span><br><span class="line">        min_loss = L1</span><br><span class="line">        best_k, best_b = k, b</span><br><span class="line">        loss_update.append([i, L1])</span><br><span class="line">        <span class="keyword">if</span> i % <span class="number">100</span> ==<span class="number">0</span>:</span><br><span class="line">            print(<span class="string">"在第&#123;&#125;步时，k和b更好，此时的Loss是：&#123;&#125;"</span>.format(i, L1))</span><br><span class="line">        </span><br><span class="line">    gradient_k = l1_partial_k(X_rm, y, yhat)</span><br><span class="line">    gradient_b = l1_partial_b(X_rm, y, yhat)</span><br><span class="line">    </span><br><span class="line">    k = k - gradient_k * learning_rate</span><br><span class="line">    b = b - gradient_b * learning_rate</span><br><span class="line">    </span><br><span class="line">plt.scatter(X_rm, y)</span><br><span class="line">plt.plot(X_rm, price(X_rm, best_k, best_b),color=<span class="string">'red'</span>)</span><br></pre></td></tr></table></figure>
+<pre><code>在第0步时，k和b更好，此时的Loss是：514.2228260869565
+在第100步时，k和b更好，此时的Loss是：510.17316314868566
+在第200步时，k和b更好，此时的Loss是：506.1235002104149
+在第300步时，k和b更好，此时的Loss是：502.07383727214403
+在第400步时，k和b更好，此时的Loss是：498.0241743338732
+在第500步时，k和b更好，此时的Loss是：493.9745113956023
+在第600步时，k和b更好，此时的Loss是：489.92484845733156
+在第700步时，k和b更好，此时的Loss是：485.8751855190608
+在第800步时，k和b更好，此时的Loss是：481.8255225807899
+在第900步时，k和b更好，此时的Loss是：477.77585964251904
+在第1000步时，k和b更好，此时的Loss是：473.72619670424825
+在第1100步时，k和b更好，此时的Loss是：469.67653376597747
+在第1200步时，k和b更好，此时的Loss是：465.62687082770657
+在第1300步时，k和b更好，此时的Loss是：461.5772078894358
+在第1400步时，k和b更好，此时的Loss是：457.52754495116494
+在第1500步时，k和b更好，此时的Loss是：453.4778820128941
+在第1600步时，k和b更好，此时的Loss是：449.4282190746233
+在第1700步时，k和b更好，此时的Loss是：445.3785561363524
+在第1800步时，k和b更好，此时的Loss是：441.32889319808163
+在第1900步时，k和b更好，此时的Loss是：437.27923025981084
+在第2000步时，k和b更好，此时的Loss是：433.22956732154
+在第2100步时，k和b更好，此时的Loss是：429.17990438326916
+在第2200步时，k和b更好，此时的Loss是：425.13024144499826
+在第2300步时，k和b更好，此时的Loss是：421.0805785067275
+在第2400步时，k和b更好，此时的Loss是：417.0309155684567
+在第2500步时，k和b更好，此时的Loss是：412.98125263018585
+在第2600步时，k和b更好，此时的Loss是：408.931589691915
+在第2700步时，k和b更好，此时的Loss是：404.8819267536443
+在第2800步时，k和b更好，此时的Loss是：400.8322638153734
+在第2900步时，k和b更好，此时的Loss是：396.78260087710254
+在第3000步时，k和b更好，此时的Loss是：392.7329379388317
+在第3100步时，k和b更好，此时的Loss是：388.6832750005609
+在第3200步时，k和b更好，此时的Loss是：384.63361206229007
+在第3300步时，k和b更好，此时的Loss是：380.5839491240192
+在第3400步时，k和b更好，此时的Loss是：376.53428618574844
+在第3500步时，k和b更好，此时的Loss是：372.48462324747754
+在第3600步时，k和b更好，此时的Loss是：368.4349603092068
+在第3700步时，k和b更好，此时的Loss是：364.3852973709359
+在第3800步时，k和b更好，此时的Loss是：360.3356344326651
+在第3900步时，k和b更好，此时的Loss是：356.2859714943943
+在第4000步时，k和b更好，此时的Loss是：352.23630855612345
+在第4100步时，k和b更好，此时的Loss是：348.18664561785266
+在第4200步时，k和b更好，此时的Loss是：344.13698267958176
+在第4300步时，k和b更好，此时的Loss是：340.087319741311
+在第4400步时，k和b更好，此时的Loss是：336.0376568030401
+在第4500步时，k和b更好，此时的Loss是：331.98799386476935
+在第4600步时，k和b更好，此时的Loss是：327.93833092649857
+在第4700步时，k和b更好，此时的Loss是：323.8886679882277
+在第4800步时，k和b更好，此时的Loss是：319.839005049958
+在第4900步时，k和b更好，此时的Loss是：315.7893421116916
+在第5000步时，k和b更好，此时的Loss是：311.7396791734253
+在第5100步时，k和b更好，此时的Loss是：307.69001623515896
+在第5200步时，k和b更好，此时的Loss是：303.6403532968926
+在第5300步时，k和b更好，此时的Loss是：299.5906903586262
+在第5400步时，k和b更好，此时的Loss是：295.54102742035985
+在第5500步时，k和b更好，此时的Loss是：291.4913644820935
+在第5600步时，k和b更好，此时的Loss是：287.4417015438272
+在第5700步时，k和b更好，此时的Loss是：283.3920386055608
+在第5800步时，k和b更好，此时的Loss是：279.34237566729445
+在第5900步时，k和b更好，此时的Loss是：275.29271272902804
+在第6000步时，k和b更好，此时的Loss是：271.24304979076175
+在第6100步时，k和b更好，此时的Loss是：267.19338685249534
+在第6200步时，k和b更好，此时的Loss是：263.143723914229
+在第6300步时，k和b更好，此时的Loss是：259.09406097596263
+在第6400步时，k和b更好，此时的Loss是：255.04439803769628
+在第6500步时，k和b更好，此时的Loss是：250.99473509942993
+在第6600步时，k和b更好，此时的Loss是：246.94507216116358
+在第6700步时，k和b更好，此时的Loss是：242.89540922289717
+在第6800步时，k和b更好，此时的Loss是：238.84574628463085
+在第6900步时，k和b更好，此时的Loss是：234.79608334636447
+在第7000步时，k和b更好，此时的Loss是：230.7464204080981
+在第7100步时，k和b更好，此时的Loss是：226.69675746983174
+在第7200步时，k和b更好，此时的Loss是：222.6470945315654
+在第7300步时，k和b更好，此时的Loss是：218.597431593299
+在第7400步时，k和b更好，此时的Loss是：214.54776865503268
+在第7500步时，k和b更好，此时的Loss是：210.4981057167663
+在第7600步时，k和b更好，此时的Loss是：206.44844277849992
+在第7700步时，k和b更好，此时的Loss是：202.3987798402336
+在第7800步时，k和b更好，此时的Loss是：198.34911690196722
+在第7900步时，k和b更好，此时的Loss是：194.29945396370084
+在第8000步时，k和b更好，此时的Loss是：190.2497910254345
+在第8100步时，k和b更好，此时的Loss是：186.20012808716814
+在第8200步时，k和b更好，此时的Loss是：182.15046514890176
+在第8300步时，k和b更好，此时的Loss是：178.1008022106354
+在第8400步时，k和b更好，此时的Loss是：174.05113927236906
+在第8500步时，k和b更好，此时的Loss是：170.0014763341027
+在第8600步时，k和b更好，此时的Loss是：165.95181339583633
+在第8700步时，k和b更好，此时的Loss是：161.90215045756997
+在第8800步时，k和b更好，此时的Loss是：157.85248751930362
+在第8900步时，k和b更好，此时的Loss是：153.80282458103724
+在第9000步时，k和b更好，此时的Loss是：149.7531616427709
+在第9100步时，k和b更好，此时的Loss是：145.70349870450454
+在第9200步时，k和b更好，此时的Loss是：141.6538357662382
+在第9300步时，k和b更好，此时的Loss是：137.6041728279718
+在第9400步时，k和b更好，此时的Loss是：133.55450988970543
+在第9500步时，k和b更好，此时的Loss是：129.50484695143908
+在第9600步时，k和b更好，此时的Loss是：125.45518401317273
+在第9700步时，k和b更好，此时的Loss是：121.40552107490637
+在第9800步时，k和b更好，此时的Loss是：117.35585813664001
+在第9900步时，k和b更好，此时的Loss是：113.30619519837286
+
+[&lt;matplotlib.lines.Line2D at 0x7fc010f27490&gt;]
+</code></pre><p><img src="https://cdn.jsdelivr.net/gh/rgwang/CDN@latest/2020/08/04/98eee24a6c9ca30e799063656f67c3b4.png" alt="output_29_2"></p>
+</div><div class="post-copyright"><div class="post-copyright__author"><span class="post-copyright-meta">文章作者: </span><span class="post-copyright-info"><a href="mailto:undefined">rgwang</a></span></div><div class="post-copyright__type"><span class="post-copyright-meta">文章链接: </span><span class="post-copyright-info"><a href="https://rgwang.github.io/2020/08/03/%E6%B7%B1%E5%BA%A6%E5%AD%A6%E4%B9%A0%E6%A1%86%E6%9E%B6%E6%90%AD%E5%BB%BA%E8%AF%BE%E7%A8%8B%E4%B8%80%EF%BC%88%E7%BA%BF%E6%80%A7%E5%9B%9E%E5%BD%92%E4%B8%8E%E6%A2%AF%E5%BA%A6%E4%B8%8B%E9%99%8D%EF%BC%89/">https://rgwang.github.io/2020/08/03/%E6%B7%B1%E5%BA%A6%E5%AD%A6%E4%B9%A0%E6%A1%86%E6%9E%B6%E6%90%AD%E5%BB%BA%E8%AF%BE%E7%A8%8B%E4%B8%80%EF%BC%88%E7%BA%BF%E6%80%A7%E5%9B%9E%E5%BD%92%E4%B8%8E%E6%A2%AF%E5%BA%A6%E4%B8%8B%E9%99%8D%EF%BC%89/</a></span></div><div class="post-copyright__notice"><span class="post-copyright-meta">版权声明: </span><span class="post-copyright-info">本博客所有文章除特别声明外，均采用 <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/" target="_blank">CC BY-NC-SA 4.0</a> 许可协议。转载请注明来自 <a href="https://rgwang.github.io" target="_blank">rgwang</a>！</span></div></div><div class="tag_share"><div class="post-meta__tag-list"><a class="post-meta__tags" href="/tags/DL/">DL</a><a class="post-meta__tags" href="/tags/Gradient-Descent/">Gradient Descent</a></div><div class="post_share"><div class="social-share" data-image="/img/landscape-photo-of-mountain-with-polar-lights-1434608.jpg" data-sites="facebook,twitter,wechat,weibo,qq"></div><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/social-share.js/dist/css/share.min.css"/><script src="https://cdn.jsdelivr.net/npm/social-share.js/dist/js/social-share.min.js"></script></div></div><div class="post-reward"><a class="reward-button button--primary button--animated"> <i class="fa fa-qrcode"></i> 打赏<div class="reward-main"><ul class="reward-all"><li class="reward-item"><img class="post-qr-code__img" src="/img/wechat.jpg" alt="微信"/><div class="post-qr-code__desc">微信</div></li><li class="reward-item"><img class="post-qr-code__img" src="/img/alipay.jpg" alt="支付寶"/><div class="post-qr-code__desc">支付寶</div></li></ul></div></a></div><nav class="pagination_post" id="pagination"><div class="next-post pull-full"><a href="/2020/07/13/YOLOv1(You-Only-Look-Once)/"><img class="next_cover" src="/img/action-android-device-electronics-595804.jpg" onerror="onerror=null;src='/img/404.jpg'"><div class="pagination-info"><div class="label">下一篇</div><div class="next_info">YOLOv1(You Only Look Once)</div></div></a></div></nav></article></main><footer id="footer" style="background-image: url(/img/landscape-photo-of-mountain-with-polar-lights-1434608.jpg)" data-type="photo"><div id="footer-wrap"><div class="copyright">&copy;2020 By rgwang</div><div class="framework-info"><span>驱动 </span><a href="https://hexo.io" target="_blank" rel="noopener"><span>Hexo</span></a><span class="footer-separator">|</span><span>主题 </span><a href="https://github.com/jerryc127/hexo-theme-butterfly" target="_blank" rel="noopener"><span>Butterfly</span></a></div><div class="footer_custom_text">Hi,welcome to my blog!</div></div></footer></div><section class="rightside" id="rightside"><div id="rightside-config-hide"><i class="fa fa-book" id="readmode" title="阅读模式"></i><i class="fa fa-plus" id="font_plus" title="放大字体"></i><i class="fa fa-minus" id="font_minus" title="缩小字体"></i><a class="translate_chn_to_cht" id="translateLink" href="javascript:translatePage();" title="简繁转换" target="_self">繁</a><i class="darkmode fa fa-moon-o" id="darkmode" title="夜间模式"></i></div><div id="rightside-config-show"><div id="rightside_config" title="设置"><i class="fa fa-cog" aria-hidden="true"></i></div><i class="fa fa-list-ul close" id="mobile-toc-button" title="目录" aria-hidden="true"></i><i class="fa fa-arrow-up" id="go-up" title="回到顶部" aria-hidden="true"></i></div></section><div class="search-dialog" id="local-search"><div class="search-dialog__title" id="local-search-title">本地搜索</div><div id="local-input-panel"><div id="local-search-input"><div class="local-search-box"><input class="local-search-box--input" placeholder="搜索文章" type="text"/></div></div></div><hr/><div id="local-search-results"><div id="local-hits"></div><div id="local-stats"><div class="local-search-stats__hr" id="hr"><span>由</span> <a href="https://github.com/wzpan/hexo-generator-search" target="_blank" rel="noopener" style="color:#49B1F5;">hexo-generator-search</a>
+ <span>提供支持</span></div></div></div><span class="search-close-button"><i class="fa fa-times"></i></span></div><div class="search-mask"></div><script src="https://cdn.jsdelivr.net/npm/jquery@latest/dist/jquery.min.js"></script><script src="/js/utils.js"></script><script src="/js/main.js"></script><script src="/js/tw_cn.js"></script><script src="https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@latest/dist/jquery.fancybox.min.js"></script><script type="text/x-mathjax-config">MathJax.Hub.Config({
+  tex2jax: {
+    inlineMath: [ ['$','$'], ["\\(","\\)"]  ],
+    processEscapes: true,
+    skipTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code']
+  },
+  CommonHTML: {
+    linebreaks: { automatic: true, width: "90% container" }
+  },
+  "HTML-CSS": { 
+    linebreaks: { automatic: true, width: "90% container" }
+  },
+  "SVG": { 
+    linebreaks: { automatic: true, width: "90% container" }
+  }
+});
+</script><script type="text/x-mathjax-config">MathJax.Hub.Queue(function() {
+  var all = MathJax.Hub.getAllJax(), i;
+  for (i=0; i < all.length; i += 1) {
+    all[i].SourceElement().parentNode.className += ' has-jax';
+  }
+});
+</script><script src="https://cdn.jsdelivr.net/npm/mathjax/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script><script src="https://cdn.jsdelivr.net/npm/animejs@latest/anime.min.js"></script><script src="/js/third-party/fireworks.js"></script><script id="ribbon_piao" mobile="false" src="/js/third-party/piao.js"></script><script id="canvas_nest" color="0,0,255" opacity="0.7" zIndex="-1" count="99" mobile="false" src="/js/third-party/canvas-nest.js"></script><script async src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script><script src="https://cdn.jsdelivr.net/npm/instant.page@3/instantpage.min.js" type="module"></script><script src="/js/search/local-search.js"></script><script>var endLoading = function () {
+  document.body.style.overflow = 'auto';
+  document.getElementById('loading-box').classList.add("loaded")
+}
+window.addEventListener('load',endLoading)</script></body></html>
