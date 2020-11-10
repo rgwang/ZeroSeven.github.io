@@ -4,6 +4,48 @@
   
     
     <entry>
+      <title>AlexNet</title>
+      <link href="/2020/10/26/AlexNet/"/>
+      <url>/2020/10/26/AlexNet/</url>
+      
+        <content type="html"><![CDATA[<h1 id="ImageNet-Classification-with-Deep-Convolutional-Neural-Networks"><a href="#ImageNet-Classification-with-Deep-Convolutional-Neural-Networks" class="headerlink" title="ImageNet Classification with Deep Convolutional Neural Networks"></a>ImageNet Classification with Deep Convolutional Neural Networks</h1><h2 id="1-研究背景"><a href="#1-研究背景" class="headerlink" title="1.研究背景"></a>1.研究背景</h2><p><img src="https://cdn.jsdelivr.net/gh/rgwang/CDN@latest/2020/10/26/16605ace52806eb70dbf2503cda5b138.png" alt="image-20201026214239316"></p><p>ILSVRC：大规模图像识别挑战赛 ImageNet Large Scale Visual Recognition Challenge 是李飞飞等人于2010年创办的图像识别挑战赛，自 2010起连续举办8年，极大地推动计算机视觉发展。比赛项目涵盖：图像分类(Classification)、目标定位(Object localization)、目标检测(Object detection)、视 频目标检测(Object detection from video)、场景分类(Scene classification)、场景解析(Scene parsing) 竞赛中脱颖而出大量经典模型： alexnet，vgg，googlenet，resnet，densenet等。</p><p><img src="https://cdn.jsdelivr.net/gh/rgwang/CDN@latest/2020/10/26/8d9a32ce1f48f80b0a34c611ef8f63d2.png" alt="image-20201026214630430"></p><p>TOP-5 error: For each image, algorithms will produce a list of at most 5 object categories in the descending order of confidence. The quality of a labeling will be evaluated based on the label that best matches the ground truth label for the image. The idea is to allow an algorithm to identify multiple objects in an image and not be penalized if one of the objects identified was in fact present, but not included in the ground truth. For each image, an algorithm will produce 5 labels <script type="math/tex">l_j</script>,<em>j</em>=1,…,5. The ground truth labels for the image are <script type="math/tex">g_k</script>,<em>k</em>=1,…,<em>n</em> with n classes of  objects labeled. The error of the algorithm for that image would be <script type="math/tex">e=\frac{1}{n} \cdot \sum_{k} \min _{j} d\left(l_{j}, g_{k}\right)</script>, <em>d</em>(<em>x</em>,<em>y</em>)=0 if <em>x</em>=<em>y</em> and 1 otherwise. The overall error score for an algorithm is the average error over  all test images. Note that for this version of the competition, n=1, that is, one ground truth label per image.</p><h2 id="2-研究成果"><a href="#2-研究成果" class="headerlink" title="2.研究成果"></a>2.研究成果</h2><p><img src="https://cdn.jsdelivr.net/gh/rgwang/CDN@latest/2020/10/27/dcef9899c597b68033d69fa64d38c234.png" alt="image-20201027193850118"></p><h2 id="3-AlexNet历史意义"><a href="#3-AlexNet历史意义" class="headerlink" title="3.AlexNet历史意义"></a>3.AlexNet历史意义</h2><p><img src="https://cdn.jsdelivr.net/gh/rgwang/CDN@latest/2020/10/27/2619444912a723bbd757a042bdbed49b.png" alt="image-20201027193948812"></p><h2 id="4-Paper"><a href="#4-Paper" class="headerlink" title="4.Paper"></a>4.Paper</h2><h3 id="4-1-Abstract"><a href="#4-1-Abstract" class="headerlink" title="4.1 Abstract"></a>4.1 Abstract</h3><ol><li>在ILSVRC-2010的120万张图片上训练深度卷积神经网络，获得最优结果，top-1和top-5 error分别为 37.5%, 17%。</li><li>该网络（AlexNet）由5个卷积层和3个全连接层构成，共计6000万参数，65万个神经元。</li><li>为加快训练，采用非饱和激活函数——ReLU，采用GPU训练。</li><li>为减轻过拟合，采用Dropout。</li><li>基于以上模型及技巧，在ILSVRC-2012以超出第二名10.9个百分点成绩夺冠。</li></ol><h3 id="4-2-AlexNet结构"><a href="#4-2-AlexNet结构" class="headerlink" title="4.2 AlexNet结构"></a>4.2 AlexNet结构</h3><p><img src="https://cdn.jsdelivr.net/gh/rgwang/CDN@latest/2020/10/28/b8c8788bcc19d602553cee68e517ad68.png" alt="image-20201028185046038"></p><ol><li><p>5个卷积层，3个全连接层</p></li><li><p>参数计算：</p><p><img src="https://cdn.jsdelivr.net/gh/rgwang/CDN@latest/2020/10/28/90846dc37d5a86465cf0ad54f4c5cb4a.png" alt="image-20201028200920234"></p><p><script type="math/tex">F_i</script>是输入通道数，<script type="math/tex">K_s</script>是卷积核尺寸，<script type="math/tex">K_n</script>是输出通道数。</p></li><li><p>结构特点</p><ol><li><p>ReLU Nonlinearity</p><ol><li><p>使网络训练更快</p><p><img src="https://cdn.jsdelivr.net/gh/rgwang/CDN@latest/2020/10/28/99f32879c9619b4c4d525df1c603fd2f.png" alt="image-20201028203115694" style="zoom:80%;" /></p></li><li><p>防止梯度消失</p></li><li><p>使网络具有稀疏性（负半轴归0）</p><p><img src="https://cdn.jsdelivr.net/gh/rgwang/CDN@latest/2020/10/28/0ef20eb499c101f1009aedbbc94870b0.png" alt="image-20201028203200576"></p></li></ol></li><li><p>Local Response Normalization(局部响应标准化) (现已基本弃用)</p><p><img src="https://cdn.jsdelivr.net/gh/rgwang/CDN@latest/2020/10/28/a91af481a1e7dbc974a221fe4a409e6d.png" alt="image-20201028204803548"></p><p>Response normalization reduces our top-1 and top-5 error rates by 1.4% and 1.2%, respectively.</p></li><li><p>Overlapping Pooling(带重叠的池化)</p><p>传统池化：步长stride=池化核大小z</p><p>Overlapping Pooling：步长stride&lt;池化核大小z</p><p>This scheme reduces the top-1 and top-5 error rates by 0.4% and 0.3%, respectively.</p></li></ol></li></ol><h3 id="4-3-训练技巧"><a href="#4-3-训练技巧" class="headerlink" title="4.3 训练技巧"></a>4.3 训练技巧</h3><ol><li><p>Data Augmentation</p><ul><li><p>针对位置</p><p><img src="https://cdn.jsdelivr.net/gh/rgwang/CDN/img/20201103203959.png" alt=""></p></li><li><p>针对颜色：通过PCA方法修改RGB通道的像素值，实现颜色扰动，在top-1中提升1个点</p></li></ul></li><li><p>Dropout</p><p>Combining the predictions of many different models is a very successful way to reduce test errors, but it appears to be too expensive for big neural networks that already take several days to train. There is, however, a very efficient version of model combination that only costs about a factor of two during training. The recently-introduced technique, called “dropout”, consists of setting to zero the output of each hidden neuron with probability 0.5. The neurons which are “dropped out” in this way do not contribute to the forward pass and do not participate in back-propagation. So every time an input is presented, the neural network samples a different architecture, but all these architectures share weights. </p><p><img src="https://cdn.jsdelivr.net/gh/rgwang/CDN/img/20201103203838.png" alt=""></p></li></ol><h3 id="4-4-实验结果及分析"><a href="#4-4-实验结果及分析" class="headerlink" title="4.4 实验结果及分析"></a>4.4 实验结果及分析</h3><ol><li><p>ILSVRC-2012分类比赛<img src="https://cdn.jsdelivr.net/gh/rgwang/CDN/img/image-20201109161600304.png" alt="image-20201109161600304"></p></li><li><p>卷积核可视化</p><ul><li>卷积核呈现出对不同频率、方向和颜色特征的敏感性</li><li>两个gpu呈现出分工学习的特点</li></ul><p>The kernels on GPU 1 are largely color-agnostic, while the kernels<br>on on GPU 2 are largely color-specific. This kind of specialization occurs during every run and is independent of any particular random weight initialization.</p><p><img src="https://cdn.jsdelivr.net/gh/rgwang/CDN/img/image-20201109162653524.png" alt="image-20201109162653524"></p></li><li><p>特征的相似性</p><ul><li><p>相似图片的第二个全连接层输出的特征向量的欧氏距离相近。</p></li><li><p>直接用欧氏距离计算4096维全连接输出向量的相似性仍是低效的，但可以通过自编码器(auto-encoder)来利用这些向量得到编码，这比直接将自编码器作用在原图(224x224x3)上更高效。</p></li><li><p>启发：可用AlexNet提取高级特征进行图像检索、图像聚类、图像编码。</p><p><img src="https://cdn.jsdelivr.net/gh/rgwang/CDN/img/image-20201109164602784.png" alt="image-20201109164602784"></p></li></ul></li></ol><h2 id="5-总结"><a href="#5-总结" class="headerlink" title="5. 总结"></a>5. 总结</h2><ol><li><p>创新点</p><ul><li>采用ReLu加快网络训练（广泛使用）</li><li>采用LRN提升网络泛化能力</li><li>采用Overlapping Pooling提升指标</li><li>采用随机裁剪翻转及色彩扰动增加数据多样性（广泛使用）</li><li>采用Dropout减轻过拟合（FC层使用，广泛使用）</li></ul></li><li><p>启发点（可用于参考文献备用）</p><p><img src="https://cdn.jsdelivr.net/gh/rgwang/CDN/img/image-20201110134814268.png" alt="image-20201110134814268"></p><p><img src="https://cdn.jsdelivr.net/gh/rgwang/CDN/img/image-20201110134840650.png" alt="image-20201110134840650"></p></li></ol><h2 id="6-代码"><a href="#6-代码" class="headerlink" title="6. 代码"></a>6. 代码</h2><ol><li><p>```python<br>torch.topk(input, k, dim=None, largest=True, sorted=True, out=None)</p><h1 id="功能：找出前k大的数据，及其索引序号"><a href="#功能：找出前k大的数据，及其索引序号" class="headerlink" title="功能：找出前k大的数据，及其索引序号"></a>功能：找出前k大的数据，及其索引序号</h1><h1 id="input-张量"><a href="#input-张量" class="headerlink" title="input:张量"></a>input:张量</h1><h1 id="k-决定选取k个值"><a href="#k-决定选取k个值" class="headerlink" title="k:决定选取k个值"></a>k:决定选取k个值</h1><h1 id="dim-索引维度"><a href="#dim-索引维度" class="headerlink" title="dim:索引维度"></a>dim:索引维度</h1><h1 id="返回："><a href="#返回：" class="headerlink" title="返回："></a>返回：</h1><h1 id="Tensor-前k大的值"><a href="#Tensor-前k大的值" class="headerlink" title="Tensor:前k大的值"></a>Tensor:前k大的值</h1><h1 id="LongTensor-前k大的值所在的位置"><a href="#LongTensor-前k大的值所在的位置" class="headerlink" title="LongTensor:前k大的值所在的位置"></a>LongTensor:前k大的值所在的位置</h1><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line">2. &#96;&#96;&#96;python</span><br><span class="line">   transforms.FiveCrop(size)</span><br><span class="line">   transforms.TenCrop(size, vertical_flip&#x3D;False)</span><br><span class="line">   # 功能：FiveCrop在图像的上下左右以及中心裁剪出尺寸为size的5张</span><br><span class="line">   # 图片。TenCrop对这5张图片进行水平或垂直镜像获得10张图片。</span><br><span class="line">   # size:所需裁剪图片尺寸</span><br><span class="line">   # vertical_flip:是否垂直翻转</span><br></pre></td></tr></table></figure></li><li><pre><code class="lang-python">torchvision.utils.make_grid(tensor, nrow=8, padding=2, normalize=False, range=None, scale_each=False, pad_value=0)# 功能：制作网格图像，如将一个tensor的数据展成一大张网格图来观察# tensor:图像数据，B*C*H*W格式# nrow:行数（列数自动计算）# padding: 图像间距（像素单位）# normalize:是否将像素值标准化# range:标准化范围# scale_each:是否单张图维度标准化# pad_value:padding的像素值</code></pre></li></ol>]]></content>
+      
+      
+      <categories>
+          
+          <category> paper reading </category>
+          
+          <category> computer vision </category>
+          
+      </categories>
+      
+      
+        <tags>
+            
+            <tag> AlexNet </tag>
+            
+            <tag> computer vision </tag>
+            
+        </tags>
+      
+    </entry>
+    
+    
+    
+    <entry>
+      <title>VGG</title>
+      <link href="/2020/10/09/VGG/"/>
+      <url>/2020/10/09/VGG/</url>
+      
+        <content type="html"><![CDATA[<h1 id="VGG"><a href="#VGG" class="headerlink" title="VGG"></a>VGG</h1><h2 id="1-学习目标"><a href="#1-学习目标" class="headerlink" title="1.学习目标"></a>1.学习目标</h2><ol><li>模型结构设计<ol><li>小卷积核</li><li>堆叠使用卷积核</li><li>分辨率减半，通道数翻倍</li></ol></li><li>训练技巧<ol><li>尺度扰动</li><li>预训练模型初始化</li></ol></li><li>测试技巧<ol><li>多尺度测试<ol><li>Dense测试</li><li>Multi-crop测试</li></ol></li><li>多模型融合</li></ol></li></ol>]]></content>
+      
+      
+      
+    </entry>
+    
+    
+    
+    <entry>
       <title>感受野(Receptive Field)</title>
       <link href="/2020/09/23/%E6%84%9F%E5%8F%97%E9%87%8E%EF%BC%88Receptive%20Field)/"/>
       <url>/2020/09/23/%E6%84%9F%E5%8F%97%E9%87%8E%EF%BC%88Receptive%20Field)/</url>
@@ -42,7 +84,9 @@
           
           <category> object detection </category>
           
-          <category> YOLO </category>
+          <category> paper reading </category>
+          
+          <category> computer vision </category>
           
       </categories>
       
