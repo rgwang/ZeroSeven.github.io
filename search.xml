@@ -4,6 +4,33 @@
   
     
     <entry>
+      <title>ResNet</title>
+      <link href="/2020/11/23/ResNet/"/>
+      <url>/2020/11/23/ResNet/</url>
+      
+        <content type="html"><![CDATA[<h1 id="Deep-Residual-Learning-for-Image-Recognition"><a href="#Deep-Residual-Learning-for-Image-Recognition" class="headerlink" title="Deep Residual Learning for Image Recognition"></a>Deep Residual Learning for Image Recognition</h1><h2 id="1-背景、成果和意义"><a href="#1-背景、成果和意义" class="headerlink" title="1.背景、成果和意义"></a>1.背景、成果和意义</h2><h3 id="1-相关研究"><a href="#1-相关研究" class="headerlink" title="1. 相关研究"></a>1. 相关研究</h3><ul><li>Highway Network(2015年5月)，首个成功训练成百上千层(100层及900层)的卷积网络。借鉴LSTM，引入门控单元，将传统前向传播增加一条计算路径。</li></ul><h3 id="2-成果"><a href="#2-成果" class="headerlink" title="2. 成果"></a>2. 成果</h3><p><img src="https://cdn.jsdelivr.net/gh/rgwang/CDN/img/image-20201123210253632.png" alt="image-20201123210253632"></p><h3 id="3-意义"><a href="#3-意义" class="headerlink" title="3. 意义"></a>3. 意义</h3><ol><li>简洁高效的ResNet受到工业界宠爱，自提出以来已经成为工业界最受欢迎的卷积神经网络结构。</li><li>近代卷积神经网络发展史的又一里程碑，突破千层网络，跳层连接成为标配。</li></ol><h2 id="2-Paper"><a href="#2-Paper" class="headerlink" title="2.Paper"></a>2.Paper</h2><h3 id="1-摘要"><a href="#1-摘要" class="headerlink" title="1. 摘要"></a>1. 摘要</h3><ol><li>提出问题：深度卷积网络难训练</li><li>本文方法：残差学习框架可以让深层网络更容易训练</li><li>本文优点：ResNet易优化，并随着层数增加，精度也能提升</li><li>成果：ResNet比VGG深8倍，但计算复杂度更低，在ILSVRC-2015获得3.57%的top-error</li><li>other works：在CIFAR-10上训练了1000层的ResNet</li><li>其他成果：在coco检测任务中提升28%的精度，并基于ResNet夺得ILSVRC的检测、定位和COCO检测、分割四个任务的冠军</li></ol><h3 id="2-残差结构"><a href="#2-残差结构" class="headerlink" title="2. 残差结构"></a>2. 残差结构</h3><p><img src="https://cdn.jsdelivr.net/gh/rgwang/CDN/img/image-20201201154127701.png" alt="image-20201201154127701"></p><p><img src="https://cdn.jsdelivr.net/gh/rgwang/CDN/img/image-20201201154225522.png" alt="image-20201201154225522"></p><p><img src="https://cdn.jsdelivr.net/gh/rgwang/CDN/img/image-20201201154321823.png" alt="image-20201201154321823"></p><p><img src="https://cdn.jsdelivr.net/gh/rgwang/CDN/img/image-20201201154402367.png" alt="image-20201201154402367"></p><p><img src="https://cdn.jsdelivr.net/gh/rgwang/CDN/img/image-20201201154431671.png" alt="image-20201201154431671"></p><p><img src="https://cdn.jsdelivr.net/gh/rgwang/CDN/img/image-20201201154447132.png" alt="image-20201201154447132"></p><p><img src="https://cdn.jsdelivr.net/gh/rgwang/CDN/img/image-20201201154834389.png" alt="image-20201201154834389"></p><h3 id="3-ResNet结构"><a href="#3-ResNet结构" class="headerlink" title="3. ResNet结构"></a>3. ResNet结构</h3><p><img src="https://cdn.jsdelivr.net/gh/rgwang/CDN/img/image-20201201155036300.png" alt="image-20201201155036300"></p><p><img src="https://cdn.jsdelivr.net/gh/rgwang/CDN/img/image-20201201155052569.png" alt="image-20201201155052569"></p><h3 id="4-预热训练-warm-up"><a href="#4-预热训练-warm-up" class="headerlink" title="4. 预热训练(warm-up)"></a>4. 预热训练(warm-up)</h3><p><img src="https://cdn.jsdelivr.net/gh/rgwang/CDN/img/image-20201201155229802.png" alt="image-20201201155229802"></p><h2 id="3-论文总结"><a href="#3-论文总结" class="headerlink" title="3.论文总结"></a>3.论文总结</h2><h3 id="1-关键点"><a href="#1-关键点" class="headerlink" title="1. 关键点"></a>1. 关键点</h3><ul><li>引入shortcut connection，让网络信息有效传播，梯度反传顺畅，使得上千层的卷积网络也可以收敛。</li></ul><h3 id="2-启发点"><a href="#2-启发点" class="headerlink" title="2. 启发点"></a>2. 启发点</h3><p><img src="https://cdn.jsdelivr.net/gh/rgwang/CDN/img/image-20201201155740005.png" alt="image-20201201155740005"></p><p><img src="https://cdn.jsdelivr.net/gh/rgwang/CDN/img/image-20201201155800368.png" alt="image-20201201155800368"></p><p><img src="https://cdn.jsdelivr.net/gh/rgwang/CDN/img/image-20201201155814823.png" alt="image-20201201155814823"></p><p><img src="https://cdn.jsdelivr.net/gh/rgwang/CDN/img/image-20201201155832853.png" alt="image-20201201155832853"></p><p><img src="https://cdn.jsdelivr.net/gh/rgwang/CDN/img/image-20201201155933172.png" alt="image-20201201155933172"></p><p><img src="https://cdn.jsdelivr.net/gh/rgwang/CDN/img/image-20201201160100817.png" alt="image-20201201160100817"></p>]]></content>
+      
+      
+      <categories>
+          
+          <category> paper reading,computer vision </category>
+          
+      </categories>
+      
+      
+        <tags>
+            
+            <tag> ResNet </tag>
+            
+            <tag> computer vision </tag>
+            
+        </tags>
+      
+    </entry>
+    
+    
+    
+    <entry>
       <title>AlexNet</title>
       <link href="/2020/10/26/AlexNet/"/>
       <url>/2020/10/26/AlexNet/</url>
@@ -22,9 +49,9 @@
       
         <tags>
             
-            <tag> AlexNet </tag>
-            
             <tag> computer vision </tag>
+            
+            <tag> AlexNet </tag>
             
         </tags>
       
@@ -37,9 +64,23 @@
       <link href="/2020/10/09/VGG/"/>
       <url>/2020/10/09/VGG/</url>
       
-        <content type="html"><![CDATA[<h1 id="VGG"><a href="#VGG" class="headerlink" title="VGG"></a>VGG</h1><h2 id="1-学习目标"><a href="#1-学习目标" class="headerlink" title="1.学习目标"></a>1.学习目标</h2><ol><li>模型结构设计<ol><li>小卷积核</li><li>堆叠使用卷积核</li><li>分辨率减半，通道数翻倍</li></ol></li><li>训练技巧<ol><li>尺度扰动</li><li>预训练模型初始化</li></ol></li><li>测试技巧<ol><li>多尺度测试<ol><li>Dense测试</li><li>Multi-crop测试</li></ol></li><li>多模型融合</li></ol></li></ol>]]></content>
+        <content type="html"><![CDATA[<h1 id="Very-deep-convolutional-networks-for-large-scale-image-recognition"><a href="#Very-deep-convolutional-networks-for-large-scale-image-recognition" class="headerlink" title="Very deep convolutional networks for large-scale image recognition"></a>Very deep convolutional networks for large-scale image recognition</h1><h2 id="1-学习目标"><a href="#1-学习目标" class="headerlink" title="1.学习目标"></a>1.学习目标</h2><ol><li>模型结构设计<ol><li>小卷积核</li><li>堆叠使用卷积核</li><li>分辨率减半，通道数翻倍</li></ol></li><li>训练技巧<ol><li>尺度扰动</li><li>预训练模型初始化</li></ol></li><li>测试技巧<ol><li>多尺度测试<ol><li>Dense测试</li><li>Multi-crop测试</li></ol></li><li>多模型融合</li></ol></li></ol><h2 id="2-研究背景、成果和意义"><a href="#2-研究背景、成果和意义" class="headerlink" title="2.研究背景、成果和意义"></a>2.研究背景、成果和意义</h2><p><img src="https://cdn.jsdelivr.net/gh/rgwang/CDN/img/image-20201111161555933.png" alt="image-20201111161555933"></p><p><img src="https://cdn.jsdelivr.net/gh/rgwang/CDN/img/image-20201111161948685.png" alt="image-20201111161948685"></p><ol><li><p><img src="https://cdn.jsdelivr.net/gh/rgwang/CDN/img/image-20201111162100399.png" alt="image-20201111162100399"></p></li><li><p><img src="https://cdn.jsdelivr.net/gh/rgwang/CDN/img/image-20201111162214168.png" alt="image-20201111162214168"></p></li><li><p><img src="https://cdn.jsdelivr.net/gh/rgwang/CDN/img/image-20201111190030126.png" alt="image-20201111190030126"></p><p>该模型将全连接层替换为1x1卷积，使得可以多种维度输入，且减少了重复运算。</p></li><li><p>VGG在以上模型基础上：</p><ol><li>借鉴AlexNet卷积模型结构</li><li>借鉴ZFNet小卷积核思想</li><li>借鉴OverFeat全卷积思想，实现高效的Dense预测</li><li>借鉴NIN(Network in Network)的1x1卷积</li></ol></li><li><p>VGG在ILSVRC2014的成绩</p><ul><li>VGG定位第一名，分类第二名</li><li>GoogLeNet分类第一名，定位第二名</li></ul></li><li><p>研究意义</p><ol><li>开启小卷积核时代，3x3卷积核成为主流模型</li><li>作为各类图像任务的骨干网络结构：分类、定位、检测、分割等</li></ol></li></ol><h2 id="3-VGG结构"><a href="#3-VGG结构" class="headerlink" title="3.VGG结构"></a>3.VGG结构</h2><h3 id="3-1-模型演变（VGG11-VGG19）"><a href="#3-1-模型演变（VGG11-VGG19）" class="headerlink" title="3.1 模型演变（VGG11-VGG19）"></a>3.1 模型演变（VGG11-VGG19）</h3><p><img src="https://cdn.jsdelivr.net/gh/rgwang/CDN/img/image-20201115163138754.png" alt="image-20201115163138754"></p><p><img src="https://cdn.jsdelivr.net/gh/rgwang/CDN/img/image-20201115163211898.png" alt="image-20201115163211898"></p><h3 id="3-2-参数计算"><a href="#3-2-参数计算" class="headerlink" title="3.2 参数计算"></a>3.2 参数计算</h3><p><img src="https://cdn.jsdelivr.net/gh/rgwang/CDN/img/image-20201115175901254.png" alt="image-20201115175901254"></p><p>注：一个像素需要4个Bytes存储。</p><h3 id="3-3-模型结构"><a href="#3-3-模型结构" class="headerlink" title="3.3 模型结构"></a>3.3 模型结构</h3><p><img src="https://cdn.jsdelivr.net/gh/rgwang/CDN/img/20201115180355.png" alt=""></p><h2 id="4-VGG特点"><a href="#4-VGG特点" class="headerlink" title="4.VGG特点"></a>4.VGG特点</h2><ol><li><p>堆叠3x3卷积核</p><ol><li><p>增大感受野：2个3x3堆叠等价于1个5x5；3个3x3堆叠等价于1个7x7.</p><p><img src="https://cdn.jsdelivr.net/gh/rgwang/CDN/img/image-20201115183158187.png" alt="image-20201115183158187"></p><p><img src="https://cdn.jsdelivr.net/gh/rgwang/CDN/img/image-20201115183220654.png" alt="image-20201115183220654"></p></li><li><p>增加非线性激活函数，提升特征抽象能力</p></li><li><p>减少训练参数</p><p><img src="https://cdn.jsdelivr.net/gh/rgwang/CDN/img/image-20201115183327137.png" alt="image-20201115183327137"></p></li><li><p>可看成7x7卷积核的正则化，强迫7x7分解为3x3</p></li></ol></li><li><p>尝试1x1卷积</p><ul><li>借鉴NIN，引入利用1*1卷积，增加非线性激活函数，提升模型效果。</li></ul></li></ol><h2 id="5-训练技巧"><a href="#5-训练技巧" class="headerlink" title="5.训练技巧"></a>5.训练技巧</h2><h3 id="5-1-数据增强"><a href="#5-1-数据增强" class="headerlink" title="5.1 数据增强"></a>5.1 数据增强</h3><p><img src="https://cdn.jsdelivr.net/gh/rgwang/CDN/img/image-20201116211813939.png" alt="image-20201116211813939"></p><h3 id="5-2-预训练模型初始化"><a href="#5-2-预训练模型初始化" class="headerlink" title="5.2 预训练模型初始化"></a>5.2 预训练模型初始化</h3><p><img src="https://cdn.jsdelivr.net/gh/rgwang/CDN/img/image-20201116211925947.png" alt="image-20201116211925947"></p><h2 id="6-测试技巧"><a href="#6-测试技巧" class="headerlink" title="6.测试技巧"></a>6.测试技巧</h2><h3 id="6-1-多尺度测试"><a href="#6-1-多尺度测试" class="headerlink" title="6.1 多尺度测试"></a>6.1 多尺度测试</h3><p><img src="https://cdn.jsdelivr.net/gh/rgwang/CDN/img/image-20201116214336080.png" alt="image-20201116214336080"></p><h3 id="6-2-稠密测试（Dense-test"><a href="#6-2-稠密测试（Dense-test" class="headerlink" title="6.2 稠密测试（Dense test)"></a>6.2 稠密测试（Dense test)</h3><ol><li><p>将FC层转换为卷积操作，变为全卷积网络，实现任意尺寸图片输入</p></li><li><p>经过全卷积网络得到NxNx1000的特征图</p></li><li><p>在通道维度上求和计算平均值，得到1x1000的输出向量。（因为这里是分类网络，通过多尺度平均以得到最终分类结果）</p><p><img src="https://cdn.jsdelivr.net/gh/rgwang/CDN/img/image-20201116220302143.png" alt="image-20201116220302143"></p><p><img src="https://cdn.jsdelivr.net/gh/rgwang/CDN/img/image-20201116220324918.png" alt="image-20201116220324918"></p></li></ol><h3 id="6-3-Multi-Crop测试"><a href="#6-3-Multi-Crop测试" class="headerlink" title="6.3 Multi-Crop测试"></a>6.3 Multi-Crop测试</h3><ul><li>借鉴AlexNet与GoogleNet，对图片进行Multi-Crop，裁剪大小为224x224，并水平翻转。</li><li>每张图，缩放成3种尺寸，然后每种尺寸裁剪出50张图片。(50=5x5x2，2源于水平翻转)</li></ul><h3 id="6-4-综合"><a href="#6-4-综合" class="headerlink" title="6.4 综合"></a>6.4 综合</h3><p><img src="https://cdn.jsdelivr.net/gh/rgwang/CDN/img/image-20201116220736653.png" alt="image-20201116220736653"></p><h2 id="7-实验结果及分析"><a href="#7-实验结果及分析" class="headerlink" title="7.实验结果及分析"></a>7.实验结果及分析</h2><h3 id="7-1-Single-scale-evaluation"><a href="#7-1-Single-scale-evaluation" class="headerlink" title="7.1 Single scale evaluation"></a>7.1 Single scale evaluation</h3><p><img src="https://cdn.jsdelivr.net/gh/rgwang/CDN/img/image-20201117162150582.png" alt="image-20201117162150582"></p><h3 id="7-2-Multi-scale-evaluation"><a href="#7-2-Multi-scale-evaluation" class="headerlink" title="7.2 Multi scale evaluation"></a>7.2 Multi scale evaluation</h3><p><img src="https://cdn.jsdelivr.net/gh/rgwang/CDN/img/image-20201117162342152.png" alt="image-20201117162342152"></p><h3 id="7-3-Multi-crop-evaluation"><a href="#7-3-Multi-crop-evaluation" class="headerlink" title="7.3 Multi crop evaluation"></a>7.3 Multi crop evaluation</h3><p><img src="https://cdn.jsdelivr.net/gh/rgwang/CDN/img/image-20201117163429629.png" alt="image-20201117163429629"></p><h3 id="7-4-Convnet-fusion"><a href="#7-4-Convnet-fusion" class="headerlink" title="7.4 Convnet fusion"></a>7.4 Convnet fusion</h3><p><img src="https://cdn.jsdelivr.net/gh/rgwang/CDN/img/image-20201117163614628.png" alt="image-20201117163614628"></p><h2 id="8-论文总结"><a href="#8-论文总结" class="headerlink" title="8.论文总结"></a>8.论文总结</h2><h3 id="8-1-关键点-amp-创新点"><a href="#8-1-关键点-amp-创新点" class="headerlink" title="8.1 关键点&amp;创新点"></a>8.1 关键点&amp;创新点</h3><ul><li>堆叠小卷积核，加深网络</li><li>训练阶段，尺度扰动</li><li>测试阶段，多尺度及Dense+Multi crop</li></ul><h3 id="8-2-启发点"><a href="#8-2-启发点" class="headerlink" title="8.2 启发点"></a>8.2 启发点</h3><p><img src="https://cdn.jsdelivr.net/gh/rgwang/CDN/img/image-20201117170045000.png" alt="image-20201117170045000"></p><p><img src="https://cdn.jsdelivr.net/gh/rgwang/CDN/img/image-20201117170107328.png" alt="image-20201117170107328"></p><p><img src="https://cdn.jsdelivr.net/gh/rgwang/CDN/img/image-20201117170230707.png" alt="image-20201117170230707"></p><p><img src="https://cdn.jsdelivr.net/gh/rgwang/CDN/img/image-20201117170300609.png" alt="image-20201117170300609"></p><p><img src="https://cdn.jsdelivr.net/gh/rgwang/CDN/img/image-20201117170314055.png" alt="image-20201117170314055"></p>]]></content>
       
       
+      <categories>
+          
+          <category> paper reading,computer vision </category>
+          
+      </categories>
+      
+      
+        <tags>
+            
+            <tag> computer vision </tag>
+            
+            <tag> VGG </tag>
+            
+        </tags>
       
     </entry>
     
